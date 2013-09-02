@@ -1,0 +1,16 @@
+package options
+
+import (
+	"testing"
+)
+
+func TestGet(t *testing.T) {
+	opt := Option{"h", false, "Show Help"}
+	opts := Options{&opt}
+	if opts.Get("h") != &opt {
+		t.Fatal("Get failed")
+	}
+	if opts.Get("unknown") != nil {
+		t.Fatal("Get should return nil for unknown option")
+	}
+}
