@@ -7,12 +7,13 @@ import (
 )
 
 type Option struct {
-	Flag         string
-	Value        interface{}
-	Description  string
+	Flag        string
+	Value       interface{}
+	Description string
 }
 
 type Options []*Option
+
 var Args []string
 var defaults map[string]interface{}
 
@@ -24,7 +25,6 @@ func getDefaults(options Options) {
 		}
 	}
 }
-
 
 func (options Options) Parse() error {
 	hasDash := false
