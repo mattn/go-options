@@ -87,7 +87,7 @@ func (options Options) PrintDefaults() {
 	getDefaults(options)
 	for _, option := range options {
 		if _, ok := option.Value.(string); ok {
-			fmt.Printf("  -%s=%s: %s\n", option.Flag, defaults[option.Flag], option.Description)
+			fmt.Printf("  -%s=%q: %s\n", option.Flag, defaults[option.Flag], option.Description)
 		} else {
 			fmt.Printf("  -%s(%v): %s\n", option.Flag, defaults[option.Flag], option.Description)
 		}
