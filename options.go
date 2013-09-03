@@ -98,7 +98,7 @@ func (options Options) PrintDefaults() {
 func (options Options) Has(flag string) bool {
 	for _, option := range options {
 		if option.Flag == flag {
-			return option.Value.(bool)
+			return true
 		}
 	}
 	return false
