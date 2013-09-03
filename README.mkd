@@ -1,6 +1,9 @@
 go-options
 ==========
 
+[![Build Status](https://travis-ci.org/mattn/go-options.png?branch=master)](https://travis-ci.org/mattn/go-options)
+[![Coverage Status](https://coveralls.io/repos/mattn/go-options/badge.png?branch=HEAD)](https://coveralls.io/r/mattn/go-options?branch=HEAD)
+
 Easily way to get command line flags
 
 Usage:
