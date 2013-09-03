@@ -80,6 +80,32 @@ func TestParse(t *testing.T) {
 		os.Args = oldArgs
 	}()
 	os.Args = args
+	if err := Parse(opts); err != nil {
+		t.Fatal(err)
+	}
+	if opts.String("foo") != "baz" {
+		t.Fatal(`String("foo") should return baz`)
+	}
+	if opts.String("bar") != "foo" {
+		t.Fatal(`String("bar") should return foo`)
+	}
+	if opts.Bool("h") != true {
+		t.Fatal(`Bool("h") should return true but false`)
+	}
+}
+
+func TestOptionsParse(t *testing.T) {
+	args := []string {"gotest", "-h", "-foo=baz", "-bar", "foo"}
+	opts := Options{
+		{"h", false, "Show Help"},
+		{"foo", "bar", "Specify foo"},
+		{"bar", "baz", "Specify bar"},
+	}
+	oldArgs := os.Args
+	defer func() {
+		os.Args = oldArgs
+	}()
+	os.Args = args
 	if err := opts.Parse(); err != nil {
 		t.Fatal(err)
 	}
