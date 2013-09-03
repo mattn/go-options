@@ -1,3 +1,4 @@
+//Easily way to get command line flags
 package options
 
 import (
@@ -14,6 +15,7 @@ type Option struct {
 
 type Options []*Option
 
+//Args is parsed arguments except options.
 var Args []string
 var defaults map[string]interface{}
 
@@ -26,6 +28,8 @@ func getDefaults(options Options) {
 	}
 }
 
+//Parse command line arguments.
+//If arguments contains --, following arguments doesn't treat options.
 func Parse(options Options) error {
 	hasDash := false
 	nArgs := len(os.Args)
@@ -75,18 +79,21 @@ func Parse(options Options) error {
 	return nil
 }
 
+//Syntax sugar of options.Parse().
 func (options Options) Parse() error {
 	return Parse(options)
 }
 
 var exit = os.Exit
 
+//Usage shows command line usage and default values. And exit.
 func (options Options) Usage() {
 	fmt.Printf("Usage: %s [options] [--] [args]\n", os.Args[0])
 	options.PrintDefaults()
 	exit(1)
 }
 
+//PrintDefaults shows default values.
 func (options Options) PrintDefaults() {
 	getDefaults(options)
 	for _, option := range options {
@@ -98,6 +105,7 @@ func (options Options) PrintDefaults() {
 	}
 }
 
+//Has return true if options has the flag.
 func (options Options) Has(flag string) bool {
 	for _, option := range options {
 		if option.Flag == flag {
@@ -107,6 +115,7 @@ func (options Options) Has(flag string) bool {
 	return false
 }
 
+//Get return Option struct of specified flag.
 func (options Options) Get(flag string) *Option {
 	for _, option := range options {
 		if option.Flag == flag {
@@ -116,6 +125,7 @@ func (options Options) Get(flag string) *Option {
 	return nil
 }
 
+//String return the string value of the flag.
 func (options Options) String(flag string) string {
 	for _, option := range options {
 		if option.Flag == flag {
@@ -126,6 +136,7 @@ func (options Options) String(flag string) string {
 	return ""
 }
 
+//Bool return the boolean value of the flag.
 func (options Options) Bool(flag string) bool {
 	for _, option := range options {
 		if option.Flag == flag {
@@ -136,6 +147,7 @@ func (options Options) Bool(flag string) bool {
 	return false
 }
 
+//IsBool return whether the flag is boolean flag or not.
 func (options Options) IsBool(flag string) bool {
 	for _, option := range options {
 		if option.Flag == flag {
