@@ -41,18 +41,15 @@ func (options Options) Parse() error {
 		flag, value := "", ""
 		if strings.HasPrefix(arg, "-") {
 			tokens := strings.SplitN(arg, "=", 2)
-			switch len(tokens) {
-			case 1:
+			if len(tokens) ==1 {
 				flag = tokens[0]
 				if n < nArgs-1 && options.Has(flag) && !options.IsBool(flag) {
 					value = os.Args[n+1]
 					n++
 				}
-			case 2:
+			} else {
 				flag = tokens[0]
 				value = tokens[1]
-			default:
-				continue
 			}
 		}
 
