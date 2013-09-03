@@ -14,3 +14,12 @@ func TestGet(t *testing.T) {
 		t.Fatal("Get should return nil for unknown option")
 	}
 }
+
+func TestBool(t *testing.T) {
+	opts := Options{
+		{"h", false, "Show Help"},
+	}
+	if opts.Bool("h") != false {
+		t.Fatal("Get should return false but true")
+	}
+}
