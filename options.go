@@ -31,15 +31,14 @@ func getDefaults(options Options) {
 //Parse command line arguments.
 //If arguments contains --, following arguments doesn't treat options.
 func Parse(options Options) error {
-	hasDash := false
 	nArgs := len(os.Args)
 
 	getDefaults(options)
 	for n := 1; n < nArgs; n++ {
 		arg := os.Args[n]
 		if arg == "--" {
-			hasDash = true
-			continue
+			Args = append(Args, os.Args[n+1:]...)
+			break
 		}
 
 		flag, value := "", ""
@@ -57,20 +56,16 @@ func Parse(options Options) error {
 			}
 		}
 
-		if !hasDash {
-			if len(flag) > 0 && flag[0] == '-' {
-				option := options.Get(flag[1:])
-				if option == nil {
-					return fmt.Errorf("Invalid option: '%v'\n", flag)
-				} else {
-					if _, ok := option.Value.(string); ok {
-						option.Value = value
-					} else {
-						option.Value = true
-					}
-				}
+		if len(flag) > 0 && flag[0] == '-' {
+			option := options.Get(flag[1:])
+			if option == nil {
+				return fmt.Errorf("Invalid option: '%v'\n", flag)
 			} else {
-				Args = append(Args, arg)
+				if _, ok := option.Value.(string); ok {
+					option.Value = value
+				} else {
+					option.Value = true
+				}
 			}
 		} else {
 			Args = append(Args, arg)
