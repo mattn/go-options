@@ -1,6 +1,7 @@
 package options
 
 import (
+	"os"
 	"testing"
 )
 
@@ -24,7 +25,6 @@ func TestBool(t *testing.T) {
 	}
 }
 
-
 func TestString(t *testing.T) {
 	opts := Options{
 		{"h", false, "Show Help"},
@@ -32,5 +32,25 @@ func TestString(t *testing.T) {
 	}
 	if opts.String("foo") != "bar" {
 		t.Fatal("String should return bar")
+	}
+}
+
+func TestParse(t *testing.T) {
+	args := []string {"gotest", "-h", "-foo=baz"}
+	opts := Options{
+		{"h", false, "Show Help"},
+		{"foo", "baz", "Specify foo"},
+	}
+	oldArgs := os.Args
+	defer func() {
+		os.Args = oldArgs
+	}()
+	os.Args = args
+	opts.Parse()
+	if opts.String("foo") != "baz" {
+		t.Fatal("String should return baz")
+	}
+	if opts.Bool("h") != true {
+		t.Fatal("Bool should return true but false")
 	}
 }
