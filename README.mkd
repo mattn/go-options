@@ -1,0 +1,45 @@
+go-options
+==========
+
+Easily way to get command line flags
+
+Usage:
+------
+
+```go
+var opts = options.Options{
+	{"h", false, "Show Help"},
+	{"verbose", false, "Verbose output"},
+}
+if err := opts.Parse(); err != nil || opts.Has("h") {
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+	opts.Usage()
+}
+
+for i, arg := range options.Args {
+	if opts.Bool("verbose") {
+		fmt.Printf("argument %d is %s\n", i+1, arg)
+	} else {
+		fmt.Println(arg)
+	}
+}
+```
+
+Install:
+--------
+
+```
+go get github.com/mattn/go-options
+```
+
+License:
+--------
+
+MIT: http://mattn.mit-license.org/2013
+
+Author:
+-------
+
+Yasuhiro Matsumoto (mattn.jp@gmail.com)
