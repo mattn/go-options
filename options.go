@@ -26,7 +26,7 @@ func getDefaults(options Options) {
 	}
 }
 
-func (options Options) Parse() error {
+func Parse(options Options) error {
 	hasDash := false
 	nArgs := len(os.Args)
 
@@ -73,6 +73,10 @@ func (options Options) Parse() error {
 		}
 	}
 	return nil
+}
+
+func (options Options) Parse() error {
+	return Parse(options)
 }
 
 var exit = os.Exit
