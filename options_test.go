@@ -69,10 +69,11 @@ func TestString(t *testing.T) {
 }
 
 func TestParse(t *testing.T) {
-	args := []string {"gotest", "-h", "-foo=baz"}
+	args := []string {"gotest", "-h", "-foo=baz", "-bar", "foo"}
 	opts := Options{
 		{"h", false, "Show Help"},
 		{"foo", "bar", "Specify foo"},
+		{"bar", "baz", "Specify bar"},
 	}
 	oldArgs := os.Args
 	defer func() {
@@ -83,10 +84,13 @@ func TestParse(t *testing.T) {
 		t.Fatal(err)
 	}
 	if opts.String("foo") != "baz" {
-		t.Fatal("String should return baz")
+		t.Fatal(`String("foo") should return baz`)
+	}
+	if opts.String("bar") != "foo" {
+		t.Fatal(`String("bar") should return foo`)
 	}
 	if opts.Bool("h") != true {
-		t.Fatal("Bool should return true but false")
+		t.Fatal(`Bool("h") should return true but false`)
 	}
 }
 
