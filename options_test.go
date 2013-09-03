@@ -106,8 +106,24 @@ func TestParseFail(t *testing.T) {
 	}
 }
 
+func TestParseUnknown(t *testing.T) {
+	args := []string {"gotest", "-h", "-"}
+	opts := Options{
+		{"h", false, "Show Help"},
+		{"foo", "bar", "Specify foo"},
+	}
+	oldArgs := os.Args
+	defer func() {
+		os.Args = oldArgs
+	}()
+	os.Args = args
+	if err := opts.Parse(); err == nil {
+		t.Fatal(`"-" should be error`)
+	}
+}
+
 func TestParseDash(t *testing.T) {
-	args := []string {"gotest", "-h", "-foo=baz", "--", "-boo=baz"}
+	args := []string {"gotest", "-h", "-foo=baz", "noo", "--", "-boo=baz"}
 	opts := Options{
 		{"h", false, "Show Help"},
 		{"foo", "bar", "Specify foo"},
@@ -127,7 +143,16 @@ func TestParseDash(t *testing.T) {
 		}
 	}
 	if !found {
-		t.Fatal("Dash keep -boo=baz as an argument")
+		t.Fatal("Dash should keep -boo=baz as an argument")
+	}
+	found = false
+	for _, arg := range Args {
+		if arg == "noo" {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatal(`Args should contain "noo"`)
 	}
 }
 
