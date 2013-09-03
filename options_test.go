@@ -54,3 +54,23 @@ func TestParse(t *testing.T) {
 		t.Fatal("Bool should return true but false")
 	}
 }
+
+func TestTypeMismatch(t *testing.T) {
+	args := []string {"gotest", "-h", "-foo=baz"}
+	opts := Options{
+		{"h", false, "Show Help"},
+		{"foo", "baz", "Specify foo"},
+	}
+	oldArgs := os.Args
+	defer func() {
+		os.Args = oldArgs
+	}()
+	os.Args = args
+	opts.Parse()
+	if opts.Bool("foo") != false {
+		t.Fatal("String for foo should return false")
+	}
+	if opts.String("h") != "" {
+		t.Fatal(`Bool for h should ""`)
+	}
+}
