@@ -36,7 +36,22 @@ func TestBool(t *testing.T) {
 		{"h", false, "Show Help"},
 	}
 	if opts.Bool("h") != false {
-		t.Fatal("Bool should return false but true")
+		t.Fatal(`Bool("h") should return false but true`)
+	}
+	if opts.Bool("g") != false {
+		t.Fatal(`Bool("g") should return false but true`)
+	}
+}
+
+func TestIsBool(t *testing.T) {
+	opts := Options{
+		{"h", false, "Show Help"},
+	}
+	if opts.IsBool("h") != true {
+		t.Fatal(`IsBool("h") should return false but true`)
+	}
+	if opts.IsBool("g") != false {
+		t.Fatal(`IsBool("g") should return false but true`)
 	}
 }
 
@@ -46,7 +61,10 @@ func TestString(t *testing.T) {
 		{"foo", "bar", "Specify foo"},
 	}
 	if opts.String("foo") != "bar" {
-		t.Fatal("String should return bar")
+		t.Fatal(`String("foo") should return bar`)
+	}
+	if opts.String("boo") != "" {
+		t.Fatal(`String("boo") should return ""`)
 	}
 }
 
@@ -61,12 +79,55 @@ func TestParse(t *testing.T) {
 		os.Args = oldArgs
 	}()
 	os.Args = args
-	opts.Parse()
+	if err := opts.Parse(); err != nil {
+		t.Fatal(err)
+	}
 	if opts.String("foo") != "baz" {
 		t.Fatal("String should return baz")
 	}
 	if opts.Bool("h") != true {
 		t.Fatal("Bool should return true but false")
+	}
+}
+
+func TestParseFail(t *testing.T) {
+	args := []string {"gotest", "-h", "-foo=baz", "-boo=baz"}
+	opts := Options{
+		{"h", false, "Show Help"},
+		{"foo", "bar", "Specify foo"},
+	}
+	oldArgs := os.Args
+	defer func() {
+		os.Args = oldArgs
+	}()
+	os.Args = args
+	if err := opts.Parse(); err == nil {
+		t.Fatal("Parse Should be fail")
+	}
+}
+
+func TestParseDash(t *testing.T) {
+	args := []string {"gotest", "-h", "-foo=baz", "--", "-boo=baz"}
+	opts := Options{
+		{"h", false, "Show Help"},
+		{"foo", "bar", "Specify foo"},
+	}
+	oldArgs := os.Args
+	defer func() {
+		os.Args = oldArgs
+	}()
+	os.Args = args
+	if err := opts.Parse(); err != nil {
+		t.Fatal(err)
+	}
+	found := false
+	for _, arg := range Args {
+		if arg == "-boo=baz" {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatal("Dash keep -boo=baz as an argument")
 	}
 }
 
@@ -119,3 +180,11 @@ func TestPrintDefaults(t *testing.T) {
 		t.Fatal(`PrintDefaults should contains -h(false)`)
 	}
 }
+
+/*
+func TestUsage(t *testing.T) {
+	tmp := os.TempDir()
+	gopath := os.Getenv("GOPATH")
+	os.Setenv("GOPATH", tmp)
+}
+*/
