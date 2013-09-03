@@ -43,7 +43,7 @@ func (options Options) Parse() error {
 			tokens := strings.SplitN(arg, "=", 2)
 			if len(tokens) ==1 {
 				flag = tokens[0]
-				if n < nArgs-1 && options.Has(flag) && !options.IsBool(flag) {
+				if n < nArgs-1 && options.Has(flag[1:]) && !options.IsBool(flag[1:]) {
 					value = os.Args[n+1]
 					n++
 				}
