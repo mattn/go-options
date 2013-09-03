@@ -78,10 +78,12 @@ func (options Options) Parse() error {
 	return nil
 }
 
+var exit = os.Exit
+
 func (options Options) Usage() {
 	fmt.Printf("Usage: %s [options] [--] [args]\n", os.Args[0])
 	options.PrintDefaults()
-	os.Exit(1)
+	exit(1)
 }
 
 func (options Options) PrintDefaults() {

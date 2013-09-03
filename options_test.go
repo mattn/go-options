@@ -181,10 +181,40 @@ func TestPrintDefaults(t *testing.T) {
 	}
 }
 
-/*
 func TestUsage(t *testing.T) {
-	tmp := os.TempDir()
-	gopath := os.Getenv("GOPATH")
-	os.Setenv("GOPATH", tmp)
+	called := false
+	exit = func(n int) {
+		called = true
+	}
+	args := []string {"gotest", "-h", "-foo=baz"}
+	opts := Options{
+		{"h", false, "Show Help"},
+		{"foo", "bar", "Specify foo"},
+	}
+	oldArgs := os.Args
+	defer func() {
+		os.Args = oldArgs
+	}()
+	os.Args = args
+	opts.Parse()
+	var b bytes.Buffer
+	temp, err := ioutil.TempFile("", "")
+	if err != nil {
+		t.Fail()
+	}
+	oldStdout := os.Stdout
+	os.Stdout = temp
+	opts.Usage()
+	if !called {
+		t.Fatal(`Usage wasn't called`)
+	}
+	os.Stdout = oldStdout
+	output := string(b.Bytes())
+	if strings.Contains(output, "-h(false)") {
+		t.Fatal(`PrintDefaults should contains -h(false)`)
+	}
+	if strings.Contains(output, `-foo("baz")`) {
+		t.Fatal(`PrintDefaults should contains -h(false)`)
+	}
+
 }
-*/
