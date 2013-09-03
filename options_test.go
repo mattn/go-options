@@ -1,7 +1,10 @@
 package options
 
 import (
+	"bytes"
+	"io/ioutil"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -39,7 +42,7 @@ func TestParse(t *testing.T) {
 	args := []string {"gotest", "-h", "-foo=baz"}
 	opts := Options{
 		{"h", false, "Show Help"},
-		{"foo", "baz", "Specify foo"},
+		{"foo", "bar", "Specify foo"},
 	}
 	oldArgs := os.Args
 	defer func() {
@@ -59,7 +62,7 @@ func TestTypeMismatch(t *testing.T) {
 	args := []string {"gotest", "-h", "-foo=baz"}
 	opts := Options{
 		{"h", false, "Show Help"},
-		{"foo", "baz", "Specify foo"},
+		{"foo", "bar", "Specify foo"},
 	}
 	oldArgs := os.Args
 	defer func() {
@@ -72,5 +75,35 @@ func TestTypeMismatch(t *testing.T) {
 	}
 	if opts.String("h") != "" {
 		t.Fatal(`Bool for h should ""`)
+	}
+}
+
+func TestPrintDefaults(t *testing.T) {
+	args := []string {"gotest", "-h", "-foo=baz"}
+	opts := Options{
+		{"h", false, "Show Help"},
+		{"foo", "bar", "Specify foo"},
+	}
+	oldArgs := os.Args
+	defer func() {
+		os.Args = oldArgs
+	}()
+	os.Args = args
+	opts.Parse()
+	var b bytes.Buffer
+	temp, err := ioutil.TempFile("", "")
+	if err != nil {
+		t.Fail()
+	}
+	oldStdout := os.Stdout
+	os.Stdout = temp
+	opts.PrintDefaults()
+	os.Stdout = oldStdout
+	output := string(b.Bytes())
+	if strings.Contains(output, "-h(false)") {
+		t.Fatal(`PrintDefaults should contains -h(false)`)
+	}
+	if strings.Contains(output, `-foo("baz")`) {
+		t.Fatal(`PrintDefaults should contains -h(false)`)
 	}
 }
