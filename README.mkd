@@ -14,7 +14,7 @@ var opts = options.Options{
 	{"h", false, "Show Help"},
 	{"verbose", false, "Verbose output"},
 }
-if err := opts.Parse(); err != nil || opts.Has("h") {
+if err := options.Parse(opts); err != nil || opts.Bool("h") {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
