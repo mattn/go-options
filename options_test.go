@@ -19,6 +19,18 @@ func TestGet(t *testing.T) {
 	}
 }
 
+func TestHas(t *testing.T) {
+	opts := Options{
+		{"h", false, "Show Help"},
+	}
+	if opts.Has("h") != true {
+		t.Fatal(`Has("h") should return true but false`)
+	}
+	if opts.Has("g") != false {
+		t.Fatal(`Has("g") should return true but false`)
+	}
+}
+
 func TestBool(t *testing.T) {
 	opts := Options{
 		{"h", false, "Show Help"},
