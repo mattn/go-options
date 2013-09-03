@@ -20,6 +20,17 @@ func TestBool(t *testing.T) {
 		{"h", false, "Show Help"},
 	}
 	if opts.Bool("h") != false {
-		t.Fatal("Get should return false but true")
+		t.Fatal("Bool should return false but true")
+	}
+}
+
+
+func TestString(t *testing.T) {
+	opts := Options{
+		{"h", false, "Show Help"},
+		{"foo", "bar", "Specify foo"},
+	}
+	if opts.String("foo") != "bar" {
+		t.Fatal("String should return bar")
 	}
 }
