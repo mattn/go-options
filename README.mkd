@@ -6,8 +6,8 @@ go-options
 
 Easily way to get command line flags
 
-Usage:
-------
+Usage
+-----
 
 ```go
 var opts = options.Options{
@@ -30,19 +30,19 @@ for i, arg := range options.Args {
 }
 ```
 
-Install:
---------
+Installation
+------------
 
 ```
 go get github.com/mattn/go-options
 ```
 
-License:
---------
+License
+-------
 
 MIT: http://mattn.mit-license.org/2013
 
-Author:
--------
+Author
+------
 
 Yasuhiro Matsumoto (mattn.jp@gmail.com)
